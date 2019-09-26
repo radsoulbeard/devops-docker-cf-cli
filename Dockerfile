@@ -14,7 +14,7 @@ RUN apt-get update && \
 # add group & user
 RUN addgroup -gid 1000 piper && \
     useradd piper --uid 1000 --gid 1000 --shell /bin/bash --create-home && \
-    chmod 777 /home/piper
+    chmod 777 /home/piper && \
     curl --location --silent "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github" | tar -zx -C /usr/local/bin && \
     cf --version
 
