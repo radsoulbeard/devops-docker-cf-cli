@@ -1,6 +1,7 @@
 FROM buildpack-deps:stretch-curl
 
 ENV VERSION 0.1
+ENV CF_PLUGIN_HOME /home/piper
 
 # https://github.com/hadolint/hadolint/wiki/DL4006
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
