@@ -1,7 +1,6 @@
 FROM buildpack-deps:stretch-curl
 
 ENV VERSION 0.1
-ENV CF_PLUGIN_HOME /home/piper
 
 # https://github.com/hadolint/hadolint/wiki/DL4006
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -14,12 +13,12 @@ RUN apt-get update && \
 # add group & user
 RUN addgroup -gid 1000 piper && \
     useradd piper --uid 1000 --gid 1000 --shell /bin/bash --create-home && \
-    chmod 777 /home/piper && \
     curl --location --silent "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github" | tar -zx -C /usr/local/bin && \
     cf --version
 
 USER piper
 WORKDIR /home/piper
+
 
 ARG MTA_PLUGIN_VERSION=2.1.0
 ARG MTA_PLUGIN_URL=https://github.com/cloudfoundry-incubator/multiapps-cli-plugin/releases/download/v${MTA_PLUGIN_VERSION}/mta_plugin_linux_amd64
@@ -27,4 +26,6 @@ ARG MTA_PLUGIN_URL=https://github.com/cloudfoundry-incubator/multiapps-cli-plugi
 RUN cf add-plugin-repo CF-Community https://plugins.cloudfoundry.org && \
     cf install-plugin blue-green-deploy -f -r CF-Community && \
     cf install-plugin ${MTA_PLUGIN_URL} -f && \
-    cf plugins
+    cf plugins && \
+    chmod -r 777 /home/piper/.cf
+    
